@@ -58,12 +58,16 @@ function generate(width, height, spacing, turns) {
 }
 
 function render(model, output) {
-  // zoom in on model
-  const svg = makerjs.exporter.toSVG(model)
-    .replace(/ width="\d+"/g, ` width="${output.offsetWidth}"`)
-    .replace(/ height="\d+"/g, ` height="${output.offsetHeight}"`);
-
+  const svg = makerjs.exporter.toSVG(model);
   output.innerHTML = svg;
+
+  const svgElement = output.children[0];
+  const widthZoom = output.offsetWidth / svgElement.width.baseVal.value;
+  const heightZoom = output.offsetHeight / svgElement.height.baseVal.value;
+  const overallZoom = Math.min(widthZoom, heightZoom);
+  panzoom(svgElement, {
+    initialZoom: overallZoom
+  });
 }
 
 function enableDownload(model, link, type) {
