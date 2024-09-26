@@ -58,15 +58,22 @@ function generate(width, height, spacing, turns) {
 }
 
 function render(model, output) {
-  const svg = makerjs.exporter.toSVG(model);
+  const svg = makerjs.exporter.toSVG(model)
+    .replace(/ width="\d+"/g, ` width="${output.offsetWidth}"`)
+    .replace(/ height="\d+"/g, ` height="${output.offsetHeight}"`);
   output.innerHTML = svg;
 
+  // render and enable panning/zooming
   const svgElement = output.children[0];
-  const widthZoom = output.offsetWidth / svgElement.width.baseVal.value;
-  const heightZoom = output.offsetHeight / svgElement.height.baseVal.value;
-  const overallZoom = Math.min(widthZoom, heightZoom);
+  const svgWidth = svgElement.width.baseVal.value;
+  const svgHeight = svgElement.height.baseVal.value;
+  const widthZoom = output.offsetWidth / svgWidth;
+  const heightZoom = output.offsetHeight / svgHeight;
+  const initialZoomFactor = 0.95;
   panzoom(svgElement, {
-    initialZoom: overallZoom
+    initialZoom: Math.min(widthZoom, heightZoom) * initialZoomFactor,
+    initialX: initialZoomFactor * svgElement.width.baseVal.value / 2,
+    initialY: initialZoomFactor * svgElement.height.baseVal.value / 2,
   });
 }
 
