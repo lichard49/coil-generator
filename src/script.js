@@ -66,6 +66,23 @@ function render(model, output) {
   output.innerHTML = svg;
 }
 
+function enableDownload(model, link, type) {
+  let downloadData;
+  if (type === 'svg') {
+    downloadData = makerjs.exporter.toSVG(model);
+  } else if (type === 'dxf') {
+    downloadData = makerjs.exporter.toDXF(model);
+  } else {
+    console.log(type, ' is not a valid type');
+    return;
+  }
+
+  const fileName = 'coil.' + type;
+  const file = new Blob([downloadData], {type: 'text/plain'});
+  link.setAttribute('href', window.URL.createObjectURL(file));
+  link.setAttribute('download', fileName);
+}
+
 const outputPanel = document.getElementById('output-panel');
 const widthInput = document.getElementById('width-input');
 const heightInput = document.getElementById('height-input');
@@ -80,6 +97,11 @@ function runGeneration() {
 
   const model = generate(width, height, spacing, turns);
   render(model, outputPanel);
+
+  const downloadSvgButton = document.getElementById('download-svg');
+  const downloadDxfButton = document.getElementById('download-dxf');
+  enableDownload(model, downloadSvgButton, 'svg');
+  enableDownload(model, downloadDxfButton, 'dxf');
 }
 
 // run on start to show default output
