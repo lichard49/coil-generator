@@ -8,6 +8,7 @@ body {
   height: 100vh;
   display: flex;
   flex-direction: column;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
 }
 
 #output-panel {
@@ -17,4 +18,15 @@ body {
 
 #settings-panel {
   padding: 10px;
+}
+
+.input-row {
+  width: 250px;
+  display: flex;
+  flex-direction: row;
+  margin-bottom: 5px;
+}
+
+.input-cell {
+  flex: 1;
 }
